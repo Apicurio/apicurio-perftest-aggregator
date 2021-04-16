@@ -60,7 +60,9 @@ public class AggregatorResourceImpl implements AggregatorResource {
             String processSh = config.getProcessSh();
             ProcessBuilder pb = new ProcessBuilder(shell, processSh);
             Process p = pb.start();
+            IOUtils.copy(p.getInputStream(), System.out);
             p.waitFor();
+            System.out.println("====> Aggregation complete!");
         } catch (Exception e) {
             e.printStackTrace();
             throw new ServerErrorException(500, e);

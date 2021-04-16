@@ -54,6 +54,9 @@ public class StaticContentServlet extends GenericServlet {
         HttpServletRequest request = (HttpServletRequest) req;
         String pathInfo = request.getPathInfo();
         
+        if (pathInfo == null) {
+            pathInfo = "/index.html";
+        }
         if (pathInfo.contains("..")) {
             throw new UnsupportedOperationException();
         }
