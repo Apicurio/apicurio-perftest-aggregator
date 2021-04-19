@@ -20,7 +20,9 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>StaticContentServlet</servlet-name>
-        <url-pattern>/results/*</url-pattern>
+        <url-pattern>/web/*</url-pattern>
+        <url-pattern>/www/*</url-pattern>
+        <url-pattern>/w/*</url-pattern>
     </servlet-mapping>
 
 </web-app>
