@@ -71,6 +71,10 @@ public class StaticContentServlet extends GenericServlet {
         
         File file = new File(config.getHtmlDirectory(), relPath);
         
+        if (file.isDirectory()) {
+            file = new File(file, "index.html");
+        }
+        
         System.out.println("Attempting to serve file: " + file);
 
         HttpServletResponse response = (HttpServletResponse) res;
@@ -116,6 +120,9 @@ public class StaticContentServlet extends GenericServlet {
         }
         if (name.endsWith(".gif")) {
             return "image/gif";
+        }
+        if (name.endsWith(".ico")) {
+            return "image/ico";
         }
         
         System.out.println("Unknown type for file: " + name);
