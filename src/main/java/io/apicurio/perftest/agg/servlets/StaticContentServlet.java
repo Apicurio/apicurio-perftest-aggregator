@@ -71,10 +71,6 @@ public class StaticContentServlet extends GenericServlet {
         
         File file = new File(config.getHtmlDirectory(), relPath);
         
-        if (file.isDirectory()) {
-            file = new File(file, "index.html");
-        }
-        
         System.out.println("Attempting to serve file: " + file);
 
         HttpServletResponse response = (HttpServletResponse) res;
