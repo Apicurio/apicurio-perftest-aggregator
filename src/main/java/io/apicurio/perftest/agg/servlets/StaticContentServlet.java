@@ -69,7 +69,7 @@ public class StaticContentServlet extends GenericServlet {
             relPath += "index.html";
         }
         
-        File file = new File(config.getResultsDirectory(), relPath);
+        File file = new File(config.getHtmlDirectory(), relPath);
 
         HttpServletResponse response = (HttpServletResponse) res;
         if (!file.isFile()) {

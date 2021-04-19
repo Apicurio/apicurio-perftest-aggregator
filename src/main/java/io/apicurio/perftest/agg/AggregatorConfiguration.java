@@ -26,14 +26,36 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class AggregatorConfiguration {
     
-    private final String LOGS_DIR = "LOGS_DIR";
-    private final String RESULTS_DIR = "RESULTS_DIR";
-    private final String SHELL_PATH = "SHELL_PATH";
-    private final String PROCESS_SH_PATH = "PROCESS_SH_PATH";
+    public static final String GATLING_HOME = "GATLING_HOME";
+    public static final String LOGS_DIR = "LOGS_DIR";
+    public static final String RESULTS_DIR = "RESULTS_DIR";
+    public static final String HTML_DIR = "HTML_DIR";
+    public static final String SHELL_PATH = "SHELL_PATH";
+    public static final String PROCESS_SH_PATH = "PROCESS_SH_PATH";
     
+    private File gatlingHome = null;
     private File logsDir = null;
+    private File htmlDir = null;
     private File resultsDir = null;
     
+    public File getGatlingHome() {
+        if (gatlingHome == null) {
+            String gatlingPath = "/apps/gatling";
+            String ev = System.getenv(GATLING_HOME);
+            if (ev != null && !ev.trim().isEmpty()) {
+                gatlingPath = ev;
+            }
+            File file = new File(gatlingPath);
+            if (!file.isDirectory()) {
+                throw new RuntimeException("Invalid GATLING_HOME: " + file);
+            }
+            gatlingHome = file;
+            System.out.println("Gatling home dir: " + gatlingHome);
+        }
+        return gatlingHome;
+
+    }
+
     public File getLogsDirectory() {
         if (logsDir == null) {
             String logsPath = "/tmp/logs";
@@ -42,13 +64,36 @@ public class AggregatorConfiguration {
                 logsPath = ev;
             }
             File file = new File(logsPath);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
             if (!file.isDirectory()) {
-                throw new RuntimeException("Invalid logs directory path (not found): " + file);
+                throw new RuntimeException("Invalid logs directory path: " + file);
             }
             logsDir = file;
             System.out.println("Logs directory: " + logsDir);
         }
         return logsDir;
+    }
+
+    public File getHtmlDirectory() {
+        if (htmlDir == null) {
+            String htmlPath = "/tmp/html";
+            String ev = System.getenv(LOGS_DIR);
+            if (ev != null && !ev.trim().isEmpty()) {
+                htmlPath = ev;
+            }
+            File file = new File(htmlPath);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            if (!file.isDirectory()) {
+                throw new RuntimeException("Invalid html directory path: " + file);
+            }
+            htmlDir = file;
+            System.out.println("Html directory: " + htmlDir);
+        }
+        return htmlDir;
     }
     
     public File getResultsDirectory() {
@@ -57,10 +102,15 @@ public class AggregatorConfiguration {
             String ev = System.getenv(RESULTS_DIR);
             if (ev != null && !ev.trim().isEmpty()) {
                 resultsPath = ev;
+            } else {
+                resultsPath = new File(getGatlingHome(), "results").getAbsolutePath();
             }
             File file = new File(resultsPath);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
             if (!file.isDirectory()) {
-                throw new RuntimeException("Invalid results directory path (not found): " + file);
+                throw new RuntimeException("Invalid results directory path: " + file);
             }
             resultsDir = file;
             System.out.println("Results directory: " + resultsDir);

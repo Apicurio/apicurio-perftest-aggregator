@@ -47,6 +47,7 @@ public class AggregatorResourceImpl implements AggregatorResource {
         File logFile = new File(config.getLogsDirectory(), logName);
         try (InputStream from = data ; FileOutputStream to = new FileOutputStream(logFile)) {
             IOUtils.copy(from, to);
+            System.out.println("Upload of '" + logName + "' completed.");
         }
     }
 
@@ -59,6 +60,11 @@ public class AggregatorResourceImpl implements AggregatorResource {
             String shell = config.getShell();
             String processSh = config.getProcessSh();
             ProcessBuilder pb = new ProcessBuilder(shell, processSh);
+            pb.environment().putIfAbsent("GATLING_HOME", System.getenv("GATLING_HOME"));
+            pb.environment().putIfAbsent("LOGS_DIR", config.getLogsDirectory().getAbsolutePath());
+            pb.environment().putIfAbsent("HTML_DIR", config.getHtmlDirectory().getAbsolutePath());
+            pb.environment().putIfAbsent("RESULTS_DIR", config.getResultsDirectory().getAbsolutePath());
+
             Process p = pb.start();
             IOUtils.copy(p.getInputStream(), System.out);
             IOUtils.copy(p.getErrorStream(), System.err);
