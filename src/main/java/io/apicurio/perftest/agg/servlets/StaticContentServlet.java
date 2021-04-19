@@ -78,7 +78,9 @@ public class StaticContentServlet extends GenericServlet {
         System.out.println("Attempting to serve file: " + file);
 
         HttpServletResponse response = (HttpServletResponse) res;
-        if (!file.isFile()) {
+        if (file.isDirectory()) {
+            response.sendRedirect(relPath + "/");
+        } else if (!file.isFile()) {
             response.sendError(404);
         } else {
             response.setContentType(detectContentType(file));
