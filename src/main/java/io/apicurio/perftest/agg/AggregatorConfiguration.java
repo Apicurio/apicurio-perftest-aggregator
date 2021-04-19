@@ -79,7 +79,7 @@ public class AggregatorConfiguration {
     public File getHtmlDirectory() {
         if (htmlDir == null) {
             String htmlPath = "/tmp/html";
-            String ev = System.getenv(LOGS_DIR);
+            String ev = System.getenv(HTML_DIR);
             if (ev != null && !ev.trim().isEmpty()) {
                 htmlPath = ev;
             }
