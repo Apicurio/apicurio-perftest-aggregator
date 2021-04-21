@@ -25,4 +25,14 @@
         <url-pattern>/w/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>ReadyServlet</servlet-name>
+        <servlet-class>io.apicurio.perftest.agg.servlets.ReadyServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ReadyServlet</servlet-name>
+        <url-pattern>/ready</url-pattern>
+        <url-pattern>/ready/*</url-pattern>
+    </servlet-mapping>
+
 </web-app>
