@@ -22,7 +22,7 @@ public interface AggregatorResource {
     
     @Path("/logs/{logName}")
     @POST
-    @Consumes(MediaType.TEXT_PLAIN)
+    @Consumes({MediaType.TEXT_PLAIN, "application/zip"})
     public void uploadLog(@PathParam("logName") String logName, InputStream data) throws IOException;
 
     @Path("/info")
