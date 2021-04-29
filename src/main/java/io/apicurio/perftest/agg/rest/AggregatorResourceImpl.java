@@ -44,10 +44,15 @@ public class AggregatorResourceImpl implements AggregatorResource {
         if (!logName.endsWith(".log")) {
             logName += ".log";
         }
+        System.out.println("Uploading log: " + logName);
         File logFile = new File(config.getLogsDirectory(), logName);
+        System.out.println("Writing to: " + logFile.getAbsolutePath());
         try (InputStream from = data ; FileOutputStream to = new FileOutputStream(logFile)) {
             IOUtils.copy(from, to);
             System.out.println("Upload of '" + logName + "' completed.");
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw e;
         }
     }
 
