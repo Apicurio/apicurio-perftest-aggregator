@@ -41,8 +41,8 @@ public class AggregatorResourceImpl implements AggregatorResource {
      */
     @Override
     public void uploadLog(String logName, InputStream data) throws IOException {
-        if (!logName.endsWith(".log")) {
-            logName += ".log";
+        if (!logName.endsWith(".log.zip")) {
+            logName += ".log.zip";
         }
         System.out.println("Uploading log: " + logName);
         File logFile = new File(config.getLogsDirectory(), logName);
