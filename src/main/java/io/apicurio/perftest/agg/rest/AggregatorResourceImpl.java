@@ -20,6 +20,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 import javax.ws.rs.ServerErrorException;
@@ -32,6 +36,9 @@ import io.apicurio.perftest.agg.AggregatorConfiguration;
  * @author eric.wittmann@gmail.com
  */
 public class AggregatorResourceImpl implements AggregatorResource {
+
+    private AtomicInteger workersCounter = new AtomicInteger(0);
+    private Set<String> workers = new HashSet<>();
 
     @Inject
     AggregatorConfiguration config;
@@ -87,6 +94,46 @@ public class AggregatorResourceImpl implements AggregatorResource {
     @Override
     public String info() {
         return "Hello from Apicurio Performance Test Aggregator";
+    }
+
+    /**
+     * @see io.apicurio.perftest.agg.rest.AggregatorResource#workers()
+     */
+    @Override
+    public Set<String> workers() throws Exception {
+        return new HashSet<>(workers);
+    }
+
+    /**
+     * @see io.apicurio.perftest.agg.rest.AggregatorResource#workerStart()
+     */
+    @Override
+    public void workerStart(String workerId) throws Exception {
+        if (workers.add(workerId)) {
+            System.out.println("====> Worker reported is staring id:" + workerId);
+            workersCounter.incrementAndGet();
+        }
+    }
+
+    /**
+     * @see io.apicurio.perftest.agg.rest.AggregatorResource#workerStop()
+     */
+    @Override
+    public void workerStop(String workerId) throws Exception {
+        if (workers.remove(workerId)) {
+            System.out.println("====> Worker reported it finished id:" + workerId);
+            if (workersCounter.decrementAndGet() == 0) {
+                System.out.println("Triggering automatic aggregation");
+                new Thread(() -> {
+                    try {
+                        aggregate();
+                    } catch (Exception e) {
+                        System.out.println("Error performing aggregation after automatic triggering");
+                        e.printStackTrace();
+                    }
+                }, "Automatic Aggregation trigger").start();;
+            }
+        }
     }
 
 }
