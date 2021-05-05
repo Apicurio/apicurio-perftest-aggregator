@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
@@ -38,7 +38,7 @@ import io.apicurio.perftest.agg.AggregatorConfiguration;
 public class AggregatorResourceImpl implements AggregatorResource {
 
     private AtomicInteger workersCounter = new AtomicInteger(0);
-    private Set<String> workers = new HashSet<>();
+    private Set<String> workers = new CopyOnWriteArraySet<>();
 
     @Inject
     AggregatorConfiguration config;
