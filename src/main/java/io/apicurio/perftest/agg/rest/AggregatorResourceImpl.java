@@ -110,7 +110,7 @@ public class AggregatorResourceImpl implements AggregatorResource {
     @Override
     public void workerStart(String workerId) throws Exception {
         if (workers.add(workerId)) {
-            System.out.println("====> Worker reported is staring id:" + workerId);
+            System.out.println("====> Worker is starting.  ID:" + workerId);
             workersCounter.incrementAndGet();
         }
     }
@@ -121,7 +121,7 @@ public class AggregatorResourceImpl implements AggregatorResource {
     @Override
     public void workerStop(String workerId) throws Exception {
         if (workers.remove(workerId)) {
-            System.out.println("====> Worker reported it finished id:" + workerId);
+            System.out.println("====> Worker reported it finished.  ID:" + workerId);
             if (workersCounter.decrementAndGet() == 0) {
                 System.out.println("Triggering automatic aggregation");
                 new Thread(() -> {
